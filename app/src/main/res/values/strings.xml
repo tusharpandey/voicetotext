@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">Voice Demo</string>
+    <string name="start">Start</string>
+    <string name="stop">Stop</string>
+    <string name="sub_title">Describe the last position you had, including title, company name and the start/end dates of it.</string>
+</resources>
