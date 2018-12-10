@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity implements VoiceCallbacks, V
 
     private TextView textView1;
     private TextView textView2;
+    private StringBuilder stringBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,11 +23,12 @@ public class MainActivity extends AppCompatActivity implements VoiceCallbacks, V
         textView1 = findViewById(R.id.textView1);
         textView2 = findViewById(R.id.textView2);
         textView2.setOnTouchListener(this);
+        stringBuilder = new StringBuilder();
     }
 
     @Override
     public void onTextReceived(String text) {
-        textView1.setText(text);
+        textView1.setText(stringBuilder);
     }
 
     @Override
@@ -34,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements VoiceCallbacks, V
         textView2.setText(status);
         if(!status.equals(getString(R.string.start))){
             textView2.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+            stringBuilder.setLength(0);
+            textView1.setText("");
         }else{
             textView2.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
         }
@@ -42,6 +46,11 @@ public class MainActivity extends AppCompatActivity implements VoiceCallbacks, V
     @Override
     public void showLoader(boolean bool) {
         findViewById(R.id.progressBar1).setVisibility(bool ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onEndSpeech(String string) {
+        stringBuilder.append(string);
     }
 
     @Override
@@ -57,7 +66,6 @@ public class MainActivity extends AppCompatActivity implements VoiceCallbacks, V
                     GoogleSpeechHandler.getInstance(this).stopListening();
                     showLoader(false);
                     onVoiceStatus(getString(R.string.start));
-                    textView1.setText("");
                 }
 
                 break;

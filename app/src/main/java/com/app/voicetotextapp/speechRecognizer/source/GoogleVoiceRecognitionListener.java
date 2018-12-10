@@ -19,6 +19,7 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
     private SpeechRecognizer recognizer;
     private VoiceCallbacks callback;
     private MainActivity act;
+    private String partialResult = "";
 
     public void startListening(MainActivity activity) {
         this.act = activity;
@@ -59,6 +60,7 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
 
     @Override
     public void onReadyForSpeech(Bundle bundle) {
+        partialResult = "";
         ShowLogs.showLogs("onReadyForSpeech");
     }
 
@@ -83,6 +85,7 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
         ShowLogs.showLogs("onEndOfSpeech");
         callback.showLoader(false);
         recognizer.stopListening();
+        callback.onEndSpeech(partialResult);
     }
 
     @Override
@@ -149,10 +152,11 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
     public void onPartialResults(Bundle bundle) {
         ShowLogs.showLogs("onPartialResults");
         ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        if (TextUtils.isEmpty(matches.get(0))) {
+        partialResult = matches.get(0) + " ";
+        if (TextUtils.isEmpty(partialResult)) {
             return;
         }
-        callback.onTextReceived(matches.get(0));
+        callback.onTextReceived(partialResult);
     }
 
     @Override
