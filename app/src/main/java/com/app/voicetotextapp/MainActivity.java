@@ -2,7 +2,6 @@ package com.app.voicetotextapp;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -27,8 +26,7 @@ public class MainActivity extends AppCompatActivity implements VoiceCallbacks, V
 
     @Override
     public void onTextReceived(String text) {
-        String oldText = TextUtils.isEmpty(textView1.getText().toString()) ? "" : textView1.getText().toString();
-        textView1.setText(oldText + " " + text);
+        textView1.setText(text);
     }
 
     @Override
@@ -45,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements VoiceCallbacks, V
     public void showLoader(boolean bool) {
         findViewById(R.id.progressBar1).setVisibility(bool ? View.VISIBLE : View.GONE);
     }
-
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {

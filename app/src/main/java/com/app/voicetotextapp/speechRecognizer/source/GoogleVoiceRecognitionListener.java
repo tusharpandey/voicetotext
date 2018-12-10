@@ -41,6 +41,7 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, act.getPackageName());
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_WEB_SEARCH);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 3);
+        recognizerIntent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_POSSIBLY_COMPLETE_SILENCE_LENGTH_MILLIS, 20000);
         recognizerIntent.putExtra(RecognizerIntent.EXTRA_SPEECH_INPUT_COMPLETE_SILENCE_LENGTH_MILLIS, 20000);
         startListening();
@@ -52,7 +53,7 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
 
     private void startListening() {
         AudioManager audio = (AudioManager) act.getSystemService(Context.AUDIO_SERVICE);
-        audio.setStreamVolume(AudioManager.STREAM_MUSIC, 0,  AudioManager.ADJUST_MUTE);
+        audio.setStreamVolume(AudioManager.STREAM_MUSIC, 0, AudioManager.ADJUST_MUTE);
         recognizer.startListening(recognizerIntent);
     }
 
@@ -138,15 +139,20 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
 
     @Override
     public void onResults(Bundle bundle) {
-        ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        String text = TextUtils.isEmpty(matches.get(0)) ? "" : matches.get(0);
-        callback.onTextReceived(text);
+//        ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+//        String text = TextUtils.isEmpty(matches.get(0)) ? "" : matches.get(0);
+//        callback.onTextReceived(text);
         recognizer.startListening(recognizerIntent);
     }
 
     @Override
     public void onPartialResults(Bundle bundle) {
         ShowLogs.showLogs("onPartialResults");
+        ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        if (TextUtils.isEmpty(matches.get(0))) {
+            return;
+        }
+        callback.onTextReceived(matches.get(0));
     }
 
     @Override
