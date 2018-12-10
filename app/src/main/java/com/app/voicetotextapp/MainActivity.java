@@ -34,6 +34,11 @@ public class MainActivity extends AppCompatActivity implements OnTextFetched, Vi
     @Override
     public void onVoiceStatus(String status) {
         textView2.setText(status);
+        if(!status.equals(getString(R.string.start))){
+            textView2.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+        }else{
+            textView2.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+        }
     }
 
     @Override

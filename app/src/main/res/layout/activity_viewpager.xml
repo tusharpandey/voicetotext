@@ -39,11 +39,15 @@
         android:background="@android:color/black"/>
 
     <Button
+        android:layout_gravity="center_horizontal"
         android:layout_margin="16dp"
         android:textAlignment="center"
         android:id="@+id/textView2"
         android:text="@string/start"
-        android:layout_width="match_parent"
+        android:background="@android:color/darker_gray"
+        android:padding="12dp"
+        android:textColor="#ffffff"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"/>
 
 </LinearLayout>
