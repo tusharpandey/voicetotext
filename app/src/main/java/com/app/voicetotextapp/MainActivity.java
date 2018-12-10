@@ -8,9 +8,9 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.app.voicetotextapp.speechRecognizer.handler.GoogleSpeechHandler;
-import com.app.voicetotextapp.speechRecognizer.source.OnTextFetched;
+import com.app.voicetotextapp.speechRecognizer.source.VoiceCallbacks;
 
-public class MainActivity extends AppCompatActivity implements OnTextFetched, View.OnTouchListener {
+public class MainActivity extends AppCompatActivity implements VoiceCallbacks, View.OnTouchListener {
 
     private TextView textView1;
     private TextView textView2;
@@ -42,6 +42,12 @@ public class MainActivity extends AppCompatActivity implements OnTextFetched, Vi
     }
 
     @Override
+    public void showLoader(boolean bool) {
+        findViewById(R.id.progressBar1).setVisibility(bool ? View.VISIBLE : View.GONE);
+    }
+
+
+    @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
         switch (view.getId()) {
             case R.id.textView2:
@@ -52,6 +58,7 @@ public class MainActivity extends AppCompatActivity implements OnTextFetched, Vi
                 }
                 else if(motionEvent.getAction() == MotionEvent.ACTION_UP){
                     GoogleSpeechHandler.getInstance(this).stopListening();
+                    showLoader(false);
                     onVoiceStatus(getString(R.string.start));
                     textView1.setText("");
                 }

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class GoogleVoiceRecognitionListener implements RecognitionListener {
     private Intent recognizerIntent;
     private SpeechRecognizer recognizer;
-    private OnTextFetched onTextFetched;
+    private VoiceCallbacks callback;
     private MainActivity act;
 
     public void startListening(MainActivity activity) {
@@ -46,8 +46,8 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
         startListening();
     }
 
-    public GoogleVoiceRecognitionListener(OnTextFetched onTextFetched) {
-        this.onTextFetched = onTextFetched;
+    public GoogleVoiceRecognitionListener(VoiceCallbacks onTextFetched) {
+        this.callback = onTextFetched;
     }
 
     private void startListening() {
@@ -64,11 +64,12 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
     @Override
     public void onBeginningOfSpeech() {
         ShowLogs.showLogs("onBeginningOfSpeech");
+        callback.showLoader(true);
     }
 
     @Override
     public void onRmsChanged(float v) {
-        ShowLogs.showLogs("onRmsChanged");
+//        ShowLogs.showLogs("onRmsChanged");
     }
 
     @Override
@@ -79,12 +80,13 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
     @Override
     public void onEndOfSpeech() {
         ShowLogs.showLogs("onEndOfSpeech");
+        callback.showLoader(false);
         recognizer.stopListening();
     }
 
     @Override
     public void onError(int i) {
-        onTextFetched.onTextReceived(getErrorText(i));
+        callback.onTextReceived(getErrorText(i));
     }
 
     public String getErrorText(int errorCode) {
@@ -138,7 +140,7 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
     public void onResults(Bundle bundle) {
         ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         String text = TextUtils.isEmpty(matches.get(0)) ? "" : matches.get(0);
-        onTextFetched.onTextReceived(text);
+        callback.onTextReceived(text);
         recognizer.startListening(recognizerIntent);
     }
 

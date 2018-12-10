@@ -1,7 +1,9 @@
 package com.app.voicetotextapp.speechRecognizer.source;
 
-public interface OnTextFetched {
+public interface VoiceCallbacks {
     void onTextReceived(String text);
 
     void onVoiceStatus(String status);
+
+    void showLoader(boolean bool);
 }
