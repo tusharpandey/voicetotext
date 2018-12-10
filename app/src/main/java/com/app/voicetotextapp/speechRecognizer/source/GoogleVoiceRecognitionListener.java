@@ -1,6 +1,8 @@
 package com.app.voicetotextapp.speechRecognizer.source;
 
+import android.content.Context;
 import android.content.Intent;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -49,6 +51,8 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
     }
 
     private void startListening() {
+        AudioManager audio = (AudioManager) act.getSystemService(Context.AUDIO_SERVICE);
+        audio.setStreamVolume(AudioManager.STREAM_MUSIC, 0,  AudioManager.ADJUST_MUTE);
         recognizer.startListening(recognizerIntent);
     }
 

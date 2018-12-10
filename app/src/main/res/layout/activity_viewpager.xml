@@ -38,8 +38,8 @@
         android:layout_height="1dp"
         android:background="@android:color/black"/>
 
-    <TextView
-        android:padding="16dp"
+    <Button
+        android:layout_margin="16dp"
         android:textAlignment="center"
         android:id="@+id/textView2"
         android:text="@string/start"

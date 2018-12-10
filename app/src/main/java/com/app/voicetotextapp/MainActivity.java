@@ -3,13 +3,14 @@ package com.app.voicetotextapp;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
 import com.app.voicetotextapp.speechRecognizer.handler.GoogleSpeechHandler;
 import com.app.voicetotextapp.speechRecognizer.source.OnTextFetched;
 
-public class MainActivity extends AppCompatActivity implements OnTextFetched, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements OnTextFetched, View.OnTouchListener {
 
     private TextView textView1;
     private TextView textView2;
@@ -21,7 +22,7 @@ public class MainActivity extends AppCompatActivity implements OnTextFetched, Vi
 
         textView1 = findViewById(R.id.textView1);
         textView2 = findViewById(R.id.textView2);
-        textView2.setOnClickListener(this);
+        textView2.setOnTouchListener(this);
     }
 
     @Override
@@ -36,23 +37,24 @@ public class MainActivity extends AppCompatActivity implements OnTextFetched, Vi
     }
 
     @Override
-    public void onClick(View view) {
+    public boolean onTouch(View view, MotionEvent motionEvent) {
         switch (view.getId()) {
             case R.id.textView2:
-                String text = textView2.getText().toString();
 
-                if (getString(R.string.start).equals(text)) {
+                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
                     GoogleSpeechHandler.requestRecordAudioPermission(this);
-                } else {
+                    onVoiceStatus(getString(R.string.stop));
+                }
+                else if(motionEvent.getAction() == MotionEvent.ACTION_UP){
                     GoogleSpeechHandler.getInstance(this).stopListening();
+                    onVoiceStatus(getString(R.string.start));
                     textView1.setText("");
                 }
-
-                onVoiceStatus(text.equals(getString(R.string.start)) ? getString(R.string.stop) : getString(R.string.start));
 
                 break;
 
         }
+        return false;
     }
 
     @Override
