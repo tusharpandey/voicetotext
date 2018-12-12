@@ -9,13 +9,17 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="top"
-        android:padding="16dp"
+        android:paddingLeft="16dp"
+        android:paddingEnd="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:text="@string/sub_title"
         android:textColor="@android:color/black"
-        android:textSize="24sp"
+        android:textSize="16sp"
         />
 
     <View
@@ -30,7 +34,7 @@
         android:layout_weight="1"
         android:padding="16dp"
         android:textColor="@android:color/holo_red_dark"
-        android:textSize="24sp"
+        android:textSize="20sp"
         />
 
     <View
@@ -40,7 +44,7 @@
 
 
     <ProgressBar
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
         android:id="@+id/progressBar1"
         style="?android:attr/progressBarStyleSmall"
         android:layout_width="wrap_content"
