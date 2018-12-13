@@ -1,5 +1,6 @@
 package com.app.voicetotextapp.speechRecognizer.source;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -9,7 +10,6 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.text.TextUtils;
 
-import com.app.voicetotextapp.MainActivity;
 import com.app.voicetotextapp.util.ShowLogs;
 
 import java.util.ArrayList;
@@ -18,10 +18,10 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
     private Intent recognizerIntent;
     private SpeechRecognizer recognizer;
     private VoiceCallbacks callback;
-    private MainActivity act;
+    private Activity act;
     private String partialResult = "";
 
-    public void startListening(MainActivity activity) {
+    public void startListening(Activity activity) {
         this.act = activity;
         createSpeechAgain();
     }

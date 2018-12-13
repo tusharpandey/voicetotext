@@ -1,4 +1,4 @@
-package com.app.voicetotextapp.questionCreator;
+package com.app.voicetotextapp.api;
 
 import android.os.AsyncTask;
 
@@ -8,22 +8,20 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class DocReader extends AsyncTask<String, String, StringBuilder> {
+public abstract class ApiHit extends AsyncTask<String, String, StringBuilder> {
 
-    DocCallback docCallback;
-
-    public DocReader(DocCallback docCallback) {
-        this.docCallback = docCallback;
-    }
-
+    private String urlString;
     private StringBuilder sb;
+
+    public ApiHit(String url) {
+        this.urlString = url;
+    }
 
     @Override
     protected StringBuilder doInBackground(String... strings) {
-        URL url;
         HttpURLConnection urlConnection = null;
         try {
-            url = new URL("https://raw.githubusercontent.com/livecareetest/VoiceToText/master/samplefile?raw=true");
+            URL url = new URL(urlString);
 
             urlConnection = (HttpURLConnection) url
                     .openConnection();
@@ -48,12 +46,5 @@ public class DocReader extends AsyncTask<String, String, StringBuilder> {
         return sb;
     }
 
-    @Override
-    protected void onPostExecute(StringBuilder stringBuilder) {
-        super.onPostExecute(stringBuilder);
-        if (docCallback == null) {
-            return;
-        }
-        docCallback.onQuestionFetched(stringBuilder == null ? "" : stringBuilder.toString());
-    }
+    abstract protected void onPostExecute(StringBuilder stringBuilder);
 }

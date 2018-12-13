@@ -1,29 +1,31 @@
 package com.app.voicetotextapp.speechRecognizer.handler;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
-import com.app.voicetotextapp.MainActivity;
 import com.app.voicetotextapp.speechRecognizer.source.GoogleVoiceRecognitionListener;
+import com.app.voicetotextapp.speechRecognizer.source.VoiceCallbacks;
 
 public class GoogleSpeechHandler {
-    static GoogleVoiceRecognitionListener listener;
+    GoogleVoiceRecognitionListener listener;
+    VoiceCallbacks callback;
 
-    public static synchronized GoogleVoiceRecognitionListener getInstance(MainActivity activity) {
+    public synchronized GoogleVoiceRecognitionListener getInstance(VoiceCallbacks callback) {
         if (listener == null) {
-            listener = new GoogleVoiceRecognitionListener(activity);
+            listener = new GoogleVoiceRecognitionListener(callback);
         }
         return listener;
     }
 
-    public static void requestRecordAudioPermission(MainActivity activity) {
+    public void requestRecordAudioPermission(VoiceCallbacks callback, Activity activity) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             String requiredPermission = Manifest.permission.RECORD_AUDIO;
             if (activity.checkCallingOrSelfPermission(requiredPermission) == PackageManager.PERMISSION_DENIED) {
                 activity.requestPermissions(new String[]{requiredPermission}, 101);
             } else {
-                GoogleSpeechHandler.getInstance(activity).startListening(activity);
+                getInstance(callback).startListening(activity);
             }
         }
     }

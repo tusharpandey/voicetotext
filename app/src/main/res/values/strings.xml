@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Voice Demo</string>
     <string name="start">Hold to talk</string>
-    <string name="accuracy">Accuracy</string>
+    <string name="check_accuracy">Check Accuracy</string>
+    <string name="check">Check</string>
     <string name="stop">Release</string>
-    <string name="sub_title">Question : </string>
+    <string name="sub_title">Describe the last position you had, including Job Title, Company Name, and the start date and end date of it.</string>
 </resources>

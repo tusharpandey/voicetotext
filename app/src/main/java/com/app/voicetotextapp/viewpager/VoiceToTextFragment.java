@@ -1,48 +1,51 @@
-package com.app.voicetotextapp;
+package com.app.voicetotextapp.viewpager;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.app.voicetotextapp.questionCreator.DocCallback;
-import com.app.voicetotextapp.questionCreator.DocReader;
+import com.app.voicetotextapp.R;
 import com.app.voicetotextapp.speechRecognizer.handler.GoogleSpeechHandler;
 import com.app.voicetotextapp.speechRecognizer.source.VoiceCallbacks;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements VoiceCallbacks, View.OnTouchListener, DocCallback {
-
+public class VoiceToTextFragment extends Fragment implements VoiceCallbacks, View.OnTouchListener {
     private TextView textView1;
     private TextView textView2;
     private StringBuilder stringBuilder;
     private TextView question;
     private List<View> clickableItems = new ArrayList<>();
-    private View menuItem;
+    private ProgressBar progressBar;
+    private GoogleSpeechHandler googleSpeechHandler = new GoogleSpeechHandler();
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_viewpager);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.myfragment_layout, container, false);
+        return v;
+    }
 
-        question = findViewById(R.id.question);
-        textView1 = findViewById(R.id.textView1);
-        textView2 = findViewById(R.id.textView2);
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        progressBar = getView().findViewById(R.id.progressBar1);
+        question = getView().findViewById(R.id.question);
+        textView1 = getView().findViewById(R.id.textView1);
+        textView2 = getView().findViewById(R.id.textView2);
 
         clickableItems.add(question);
         clickableItems.add(textView1);
         clickableItems.add(textView2);
 
         stringBuilder = new StringBuilder();
-
-        lockClickableItems(true);
-        new DocReader(this).execute("");
+        textView2.setOnTouchListener(this);
     }
 
     @Override
@@ -64,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements VoiceCallbacks, V
 
     @Override
     public void showLoader(boolean bool) {
-        findViewById(R.id.progressBar1).setVisibility(bool ? View.VISIBLE : View.GONE);
+        progressBar.setVisibility(bool ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -78,10 +81,10 @@ public class MainActivity extends AppCompatActivity implements VoiceCallbacks, V
             case R.id.textView2:
 
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    GoogleSpeechHandler.requestRecordAudioPermission(this);
+                    googleSpeechHandler.requestRecordAudioPermission(this, getActivity());
                     onVoiceStatus(getString(R.string.stop));
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    GoogleSpeechHandler.getInstance(this).stopListening();
+                    googleSpeechHandler.getInstance(this).stopListening();
                     showLoader(false);
                     onVoiceStatus(getString(R.string.start));
                 }
@@ -93,41 +96,15 @@ public class MainActivity extends AppCompatActivity implements VoiceCallbacks, V
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        GoogleSpeechHandler.getInstance(this).stopListening();
-    }
-
-    @Override
-    public void onQuestionFetched(String text) {
-        lockClickableItems(false);
-        textView2.setOnTouchListener(this);
-        question.setText(text);
+    public void onDestroyView() {
+        super.onDestroyView();
+        googleSpeechHandler.getInstance(this).stopListening();
     }
 
     private void lockClickableItems(boolean lock) {
         for (View clickableItem : clickableItems) {
             clickableItem.setEnabled(!lock);
             clickableItem.setAlpha(lock ? .2f : 1f);
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menuitem, menu);
-        menuItem = findViewById(R.id.item1);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.item1:
-                Toast.makeText(getApplicationContext(), "Item 1 Selected", Toast.LENGTH_LONG).show();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
         }
     }
 }
