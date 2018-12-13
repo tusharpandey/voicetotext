@@ -21,6 +21,6 @@ public class AccurcyCheckApi extends ApiHit {
             return;
         }
         AccuracyResponse response = new Gson().fromJson(stringBuilder.toString(), AccuracyResponse.class);
-        docCallback.onAccurcyFetched("Language Accuracy : " + response.getLangConfidence() + "");
+        docCallback.onAccurcyFetched("Language Accuracy : " + (Double.parseDouble(response.getSimilarity())*100) + "%");
     }
 }
