@@ -23,7 +23,7 @@ public class QuestionList extends AppCompatActivity implements ReadmePageCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question_list);
         new ReadmePageApi(this).execute("");
-        getSupportActionBar().setTitle(getString(R.string.question_list));
+        getSupportActionBar().setTitle(getString(R.string.paragraph_list));
     }
 
     @Override

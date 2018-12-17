@@ -113,8 +113,8 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
     }
 
     @Override
-    public void onAccurcyFetched(String accuracy) {
-        Toast.makeText(getActivity(), accuracy, Toast.LENGTH_SHORT).show();
+    public void onAccurcyFetched(String value) {
+        Toast.makeText(getActivity(), value, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -123,7 +123,7 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
         super.onCreateOptionsMenu(menu, inflater);
     }
 
-    public void setData(String question, String token){
+    public void setData(String question, String token) {
         this.questionTxt = question;
         this.tokenTxt = token;
     }
