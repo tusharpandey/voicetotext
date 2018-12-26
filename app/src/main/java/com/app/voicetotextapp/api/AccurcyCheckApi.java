@@ -1,5 +1,7 @@
 package com.app.voicetotextapp.api;
 
+import android.text.TextUtils;
+
 import com.app.voicetotextapp.api.callback.AccuracyCheckCallback;
 import com.app.voicetotextapp.api.data.AccuracyResponse;
 import com.google.gson.Gson;
@@ -29,10 +31,11 @@ public class AccurcyCheckApi extends ApiHit {
             MathContext m = new MathContext(4);
             AccuracyResponse response = new Gson().fromJson(stringBuilder.toString(), AccuracyResponse.class);
             BigDecimal value = new BigDecimal(response.getSimilarity());
-            docCallback.onAccurcyFetched("Language Accuracy : " + value.multiply(new BigDecimal(100), m) + "%");
+            String time = TextUtils.isEmpty(response.getTime()) ? "" : response.getTime();
+            docCallback.onAccurcyFetched(value.multiply(new BigDecimal(100), m) + "%", time);
         } catch (Exception e) {
             e.printStackTrace();
-            docCallback.onAccurcyFetched("Something went wrong");
+            docCallback.onAccurcyFetched(null, null);
         }
     }
 }

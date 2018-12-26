@@ -97,38 +97,38 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
         String message = "";
         switch (errorCode) {
             case SpeechRecognizer.ERROR_AUDIO:
-                ShowLogs.showLogs("SpeechRecognizer.ERROR_AUDIO");
+                ShowLogs.showErrorLogs("SpeechRecognizer.ERROR_AUDIO");
                 startListening();
                 break;
             case SpeechRecognizer.ERROR_CLIENT:
-                ShowLogs.showLogs("SpeechRecognizer.ERROR_CLIENT");
+                ShowLogs.showErrorLogs("SpeechRecognizer.ERROR_CLIENT");
                 startListening();
                 break;
             case SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS:
-                ShowLogs.showLogs("SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS");
+                ShowLogs.showErrorLogs("SpeechRecognizer.ERROR_INSUFFICIENT_PERMISSIONS");
                 startListening();
                 break;
             case SpeechRecognizer.ERROR_NETWORK:
-                ShowLogs.showLogs("SpeechRecognizer.ERROR_NETWORK");
+                ShowLogs.showErrorLogs("SpeechRecognizer.ERROR_NETWORK");
                 break;
             case SpeechRecognizer.ERROR_NETWORK_TIMEOUT:
-                ShowLogs.showLogs("SpeechRecognizer.ERROR_NETWORK_TIMEOUT");
+                ShowLogs.showErrorLogs("SpeechRecognizer.ERROR_NETWORK_TIMEOUT");
                 break;
             case SpeechRecognizer.ERROR_NO_MATCH:
-                ShowLogs.showLogs("SpeechRecognizer.ERROR_NO_MATCH");
+                ShowLogs.showErrorLogs("SpeechRecognizer.ERROR_NO_MATCH");
                 startListening();
                 break;
             case SpeechRecognizer.ERROR_RECOGNIZER_BUSY:
-                ShowLogs.showLogs("SpeechRecognizer.ERROR_RECOGNIZER_BUSY");
+                ShowLogs.showErrorLogs("SpeechRecognizer.ERROR_RECOGNIZER_BUSY");
                 recognizer.stopListening();
                 recognizer.destroy();
                 createSpeechAgain();
                 break;
             case SpeechRecognizer.ERROR_SERVER:
-                ShowLogs.showLogs("SpeechRecognizer.ERROR_SERVER");
+                ShowLogs.showErrorLogs("SpeechRecognizer.ERROR_SERVER");
                 break;
             case SpeechRecognizer.ERROR_SPEECH_TIMEOUT:
-                ShowLogs.showLogs("SpeechRecognizer.ERROR_SPEECH_TIMEOUT");
+                ShowLogs.showErrorLogs("SpeechRecognizer.ERROR_SPEECH_TIMEOUT");
                 recognizer.stopListening();
                 recognizer.destroy();
                 createSpeechAgain();
@@ -142,20 +142,17 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
 
     @Override
     public void onResults(Bundle bundle) {
-//        ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-//        String text = TextUtils.isEmpty(matches.get(0)) ? "" : matches.get(0);
-//        callback.onTextReceived(text);
         recognizer.startListening(recognizerIntent);
     }
 
     @Override
     public void onPartialResults(Bundle bundle) {
-        ShowLogs.showLogs("onPartialResults");
         ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         partialResult = matches.get(0) + " ";
         if (TextUtils.isEmpty(partialResult)) {
             return;
         }
+        ShowLogs.showLogs(partialResult);
         callback.onTextReceived(partialResult);
     }
 

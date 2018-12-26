@@ -34,10 +34,12 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
     private GoogleSpeechHandler googleSpeechHandler = new GoogleSpeechHandler();
     private String questionTxt;
     private String tokenTxt;
+    private TextView match;
+    private TextView latency;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.myfragment_layout, container, false);
+        View v = inflater.inflate(R.layout.myfragment_accuracy, container, false);
         setHasOptionsMenu(true);
         return v;
     }
@@ -49,6 +51,8 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
         question = getView().findViewById(R.id.question);
         textView1 = getView().findViewById(R.id.textView1);
         textView2 = getView().findViewById(R.id.textView2);
+        match = getView().findViewById(R.id.match);
+        latency = getView().findViewById(R.id.lateny);
 
         clickableItems.add(question);
         clickableItems.add(textView1);
@@ -94,6 +98,8 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
                 if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     googleSpeechHandler.requestRecordAudioPermission(this, getActivity());
                     onVoiceStatus(getString(R.string.stop));
+                    latency.setText(getText(R.string.latency));
+                    match.setText(getText(R.string.match));
                 } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                     googleSpeechHandler.getInstance(this).stopListening();
                     showLoader(false);
@@ -113,19 +119,24 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
     }
 
     @Override
-    public void onAccurcyFetched(String value) {
-        Toast.makeText(getActivity(), value, Toast.LENGTH_SHORT).show();
+    public void onAccurcyFetched(String matched, String time) {
+        if (TextUtils.isEmpty(matched) && TextUtils.isEmpty(time)) {
+            Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        latency.setText(getText(R.string.latency) + time);
+        match.setText(getText(R.string.match) + matched);
+    }
+
+    public void setData(String question, String token) {
+        this.questionTxt = question;
+        this.tokenTxt = token;
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.voice_accuracy, menu);
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    public void setData(String question, String token) {
-        this.questionTxt = question;
-        this.tokenTxt = token;
     }
 
     @Override
