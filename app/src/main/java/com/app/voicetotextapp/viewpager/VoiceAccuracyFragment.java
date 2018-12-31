@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
@@ -24,7 +23,7 @@ import com.app.voicetotextapp.speechRecognizer.source.VoiceCallbacks;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, View.OnTouchListener, AccuracyCheckCallback {
+public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, View.OnClickListener, AccuracyCheckCallback {
     private TextView textView1;
     private TextView textView2;
     private StringBuilder stringBuilder;
@@ -35,7 +34,6 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
     private String questionTxt;
     private String tokenTxt;
     private TextView match;
-    private TextView latency;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,14 +50,13 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
         textView1 = getView().findViewById(R.id.textView1);
         textView2 = getView().findViewById(R.id.textView2);
         match = getView().findViewById(R.id.match);
-        latency = getView().findViewById(R.id.lateny);
 
         clickableItems.add(question);
         clickableItems.add(textView1);
         clickableItems.add(textView2);
 
         stringBuilder = new StringBuilder();
-        textView2.setOnTouchListener(this);
+        textView2.setOnClickListener(this);
         question.setText(questionTxt);
     }
 
@@ -91,25 +88,24 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
     }
 
     @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
+    public void onClick(View view) {
         switch (view.getId()) {
             case R.id.textView2:
 
-                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                String buttonText = textView2.getText().toString();
+
+                if (buttonText.equals(getString(R.string.start))) {
                     googleSpeechHandler.requestRecordAudioPermission(this, getActivity());
                     onVoiceStatus(getString(R.string.stop));
-                    latency.setText(getText(R.string.latency));
                     match.setText(getText(R.string.match));
-                } else if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                } else {
                     googleSpeechHandler.getInstance(this).stopListening();
                     showLoader(false);
                     onVoiceStatus(getString(R.string.start));
                 }
 
                 break;
-
         }
-        return false;
     }
 
     @Override
@@ -124,7 +120,6 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
             Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
             return;
         }
-        latency.setText(getText(R.string.latency) + time);
         match.setText(getText(R.string.match) + matched);
     }
 
