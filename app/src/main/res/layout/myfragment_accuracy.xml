@@ -164,6 +164,7 @@
         android:visibility="gone"/>
 
     <Button
+        android:drawableTop="@drawable/microphone_black"
         android:id="@+id/textView2"
         android:layout_width="150dp"
         android:layout_height="wrap_content"

@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Voice Demo</string>
     <string name="paragraph_list">Paragraph List</string>
-    <string name="start">Hold to talk</string>
+    <string name="start">Tap to talk</string>
     <string name="check_accuracy">Check Accuracy</string>
     <string name="check">Check</string>
-    <string name="stop">Release</string>
+    <string name="stop">Done</string>
     <string name="source">SOURCE</string>
     <string name="latency">Transcription Latency : </string>
     <string name="match">Original-Transcription Match : </string>

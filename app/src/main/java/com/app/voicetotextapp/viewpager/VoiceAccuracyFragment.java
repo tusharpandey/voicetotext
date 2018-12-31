@@ -1,5 +1,8 @@
 package com.app.voicetotextapp.viewpager;
 
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,7 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,11 +28,10 @@ import java.util.List;
 
 public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, View.OnClickListener, AccuracyCheckCallback {
     private TextView textView1;
-    private TextView textView2;
+    private Button button;
     private StringBuilder stringBuilder;
     private TextView question;
     private List<View> clickableItems = new ArrayList<>();
-    private ProgressBar progressBar;
     private GoogleSpeechHandler googleSpeechHandler = new GoogleSpeechHandler();
     private String questionTxt;
     private String tokenTxt;
@@ -45,46 +47,64 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        progressBar = getView().findViewById(R.id.progressBar1);
         question = getView().findViewById(R.id.question);
         textView1 = getView().findViewById(R.id.textView1);
-        textView2 = getView().findViewById(R.id.textView2);
+        button = getView().findViewById(R.id.textView2);
         match = getView().findViewById(R.id.match);
 
         clickableItems.add(question);
         clickableItems.add(textView1);
-        clickableItems.add(textView2);
+        clickableItems.add(button);
 
         stringBuilder = new StringBuilder();
-        textView2.setOnClickListener(this);
+        button.setOnClickListener(this);
         question.setText(questionTxt);
     }
 
     @Override
     public void onTextReceived(String text) {
-        textView1.setText(stringBuilder);
+
+        try {
+            String lastAppended = stringBuilder.substring(start);
+            if (lastAppended.equals(text)) {
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        textView1.setText(stringBuilder + text);
+    }
+
+
+    int start = 0;
+    int end = 0;
+
+    @Override
+    public void onEndSpeech(String string) {
+        start = stringBuilder.length();
+        end = start + string.length();
+        stringBuilder.append(string);
     }
 
     @Override
     public void onVoiceStatus(String status) {
-        textView2.setText(status);
+        button.setText(status);
+
+
         if (!status.equals(getString(R.string.start))) {
-            textView2.setBackgroundColor(getResources().getColor(android.R.color.holo_green_light));
+            button.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
             stringBuilder.setLength(0);
             textView1.setText("");
         } else {
-            textView2.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
+            button.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
         }
+
     }
 
     @Override
     public void showLoader(boolean bool) {
-        progressBar.setVisibility(bool ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public void onEndSpeech(String string) {
-        stringBuilder.append(string);
+//        progressBar.setVisibility(bool ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -92,17 +112,22 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
         switch (view.getId()) {
             case R.id.textView2:
 
-                String buttonText = textView2.getText().toString();
+                Drawable mDrawable = getActivity().getResources().getDrawable(R.drawable.microphone_black).mutate();
+                String buttonText = button.getText().toString();
 
                 if (buttonText.equals(getString(R.string.start))) {
                     googleSpeechHandler.requestRecordAudioPermission(this, getActivity());
                     onVoiceStatus(getString(R.string.stop));
                     match.setText(getText(R.string.match));
+                    mDrawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.greenColor), PorterDuff.Mode.SRC_IN ));
                 } else {
                     googleSpeechHandler.getInstance(this).stopListening();
                     showLoader(false);
                     onVoiceStatus(getString(R.string.start));
+                    mDrawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.blackcolor), PorterDuff.Mode.SRC_IN ));
                 }
+
+                button.setCompoundDrawablesWithIntrinsicBounds(null, mDrawable, null, null);
 
                 break;
         }

@@ -81,14 +81,6 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
     }
 
     @Override
-    public void onEndOfSpeech() {
-        ShowLogs.showLogs("onEndOfSpeech");
-        callback.showLoader(false);
-        recognizer.stopListening();
-        callback.onEndSpeech(partialResult);
-    }
-
-    @Override
     public void onError(int i) {
         callback.onTextReceived(getErrorText(i));
     }
@@ -148,12 +140,20 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
     @Override
     public void onPartialResults(Bundle bundle) {
         ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        partialResult = matches.get(0) + " ";
+        partialResult = matches.get(matches.size()-1) + " ";
         if (TextUtils.isEmpty(partialResult)) {
             return;
         }
         ShowLogs.showLogs(partialResult);
         callback.onTextReceived(partialResult);
+    }
+
+    @Override
+    public void onEndOfSpeech() {
+        ShowLogs.showLogs("onEndOfSpeech");
+        callback.showLoader(false);
+        recognizer.stopListening();
+        callback.onEndSpeech(partialResult);
     }
 
     @Override
