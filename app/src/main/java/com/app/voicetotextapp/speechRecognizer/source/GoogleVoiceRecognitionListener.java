@@ -68,6 +68,7 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
     public void onBeginningOfSpeech() {
         ShowLogs.showLogs("onBeginningOfSpeech");
         callback.showLoader(true);
+        callback.onBeginSpeech();
     }
 
     @Override
@@ -141,7 +142,7 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
     public void onPartialResults(Bundle bundle) {
         ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         partialResult = matches.get(matches.size() - 1) + " ";
-        if (TextUtils.isEmpty(partialResult)) {
+        if (TextUtils.isEmpty(partialResult) || partialResult.equals(" ")) {
             return;
         }
         ShowLogs.showLogs(partialResult);

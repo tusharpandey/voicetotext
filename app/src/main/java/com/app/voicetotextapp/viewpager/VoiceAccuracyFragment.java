@@ -29,7 +29,6 @@ import java.util.List;
 public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, View.OnClickListener, AccuracyCheckCallback {
     private TextView textView1;
     private Button button;
-    private StringBuilder stringBuilder;
     private TextView question;
     private List<View> clickableItems = new ArrayList<>();
     private GoogleSpeechHandler googleSpeechHandler = new GoogleSpeechHandler();
@@ -56,37 +55,24 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
         clickableItems.add(textView1);
         clickableItems.add(button);
 
-        stringBuilder = new StringBuilder();
         button.setOnClickListener(this);
         question.setText(questionTxt);
     }
 
     @Override
     public void onTextReceived(String text) {
-        try {
-            String lastAppended = stringBuilder.substring(start);
-            if (lastAppended.equals(text)) {
-                return;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         textView1.setText(oldText + text);
     }
-
-
-    int start = 0;
-    int end = 0;
 
     String oldText = "";
 
     @Override
     public void onEndSpeech(String string) {
-        start = stringBuilder.length();
-        end = start + string.length();
-        stringBuilder.append(string);
+        textView1.setText(oldText + string);
+    }
 
+    @Override
+    public void onBeginSpeech() {
         oldText = textView1.getText().toString();
     }
 
@@ -97,8 +83,8 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
 
         if (!status.equals(getString(R.string.start))) {
             button.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
-            stringBuilder.setLength(0);
             textView1.setText("");
+            oldText = "";
         } else {
             button.setBackgroundColor(getResources().getColor(android.R.color.darker_gray));
         }

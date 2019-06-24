@@ -8,4 +8,6 @@ public interface VoiceCallbacks {
     void showLoader(boolean bool);
 
     void onEndSpeech(String string);
+
+    void onBeginSpeech();
 }
