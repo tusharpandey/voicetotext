@@ -63,7 +63,6 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
 
     @Override
     public void onTextReceived(String text) {
-
         try {
             String lastAppended = stringBuilder.substring(start);
             if (lastAppended.equals(text)) {
@@ -73,18 +72,22 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
             e.printStackTrace();
         }
 
-        textView1.setText(stringBuilder + text);
+        textView1.setText(oldText + text);
     }
 
 
     int start = 0;
     int end = 0;
 
+    String oldText = "";
+
     @Override
     public void onEndSpeech(String string) {
         start = stringBuilder.length();
         end = start + string.length();
         stringBuilder.append(string);
+
+        oldText = textView1.getText().toString();
     }
 
     @Override
@@ -119,12 +122,12 @@ public class VoiceAccuracyFragment extends Fragment implements VoiceCallbacks, V
                     googleSpeechHandler.requestRecordAudioPermission(this, getActivity());
                     onVoiceStatus(getString(R.string.stop));
                     match.setText(getText(R.string.match));
-                    mDrawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.greenColor), PorterDuff.Mode.SRC_IN ));
+                    mDrawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.greenColor), PorterDuff.Mode.SRC_IN));
                 } else {
                     googleSpeechHandler.getInstance(this).stopListening();
                     showLoader(false);
                     onVoiceStatus(getString(R.string.start));
-                    mDrawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.blackcolor), PorterDuff.Mode.SRC_IN ));
+                    mDrawable.setColorFilter(new PorterDuffColorFilter(getResources().getColor(R.color.blackcolor), PorterDuff.Mode.SRC_IN));
                 }
 
                 button.setCompoundDrawablesWithIntrinsicBounds(null, mDrawable, null, null);

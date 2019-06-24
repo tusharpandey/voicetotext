@@ -140,7 +140,7 @@ public class GoogleVoiceRecognitionListener implements RecognitionListener {
     @Override
     public void onPartialResults(Bundle bundle) {
         ArrayList<String> matches = bundle.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        partialResult = matches.get(matches.size()-1) + " ";
+        partialResult = matches.get(matches.size() - 1) + " ";
         if (TextUtils.isEmpty(partialResult)) {
             return;
         }
